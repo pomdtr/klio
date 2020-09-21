@@ -602,7 +602,7 @@ def _profile(subcommand, klio_config, config_meta, **kwargs):
 @click.argument("entity_ids", nargs=-1, required=False)
 @cli_utils.with_klio_config
 def profile_memory(klio_config, config_meta, **kwargs):
-    _profile("memory", klio_config, **kwargs)
+    _profile("memory", klio_config, config_meta, **kwargs)
 
 
 @profile.command(
@@ -629,7 +629,7 @@ def profile_memory(klio_config, config_meta, **kwargs):
 @click.argument("entity_ids", nargs=-1, required=False)
 @cli_utils.with_klio_config
 def profile_memory_per_line(klio_config, config_meta, **kwargs):
-    _profile("memory-per-line", klio_config, **kwargs)
+    _profile("memory-per-line", klio_config, config_meta, **kwargs)
 
 
 @profile.command(
@@ -656,7 +656,7 @@ def profile_memory_per_line(klio_config, config_meta, **kwargs):
 @click.argument("entity_ids", nargs=-1, required=False)
 @cli_utils.with_klio_config
 def profile_cpu(klio_config, config_meta, **kwargs):
-    _profile("cpu", klio_config, **kwargs)
+    _profile("cpu", klio_config, config_meta, **kwargs)
 
 
 @profile.command(
@@ -683,7 +683,7 @@ def profile_cpu(klio_config, config_meta, **kwargs):
 @click.argument("entity_ids", nargs=-1, required=False)
 @cli_utils.with_klio_config
 def profile_timeit(klio_config, config_meta, **kwargs):
-    _profile("timeit", klio_config, **kwargs)
+    _profile("timeit", klio_config, config_meta, **kwargs)
 
 
 #####
