@@ -192,13 +192,17 @@ class KlioJobConfig(object):
         if self._scanned_io_subclasses is not None:
             return self._scanned_io_subclasses
 
-        # notice this will end up including intermediate classes but that
-        # shouldn't matter since they shouldn't "support" any valid
-        # combinations of type/direction
         all_subclasses = []
 
         def traverse(cls):
             for subclass in cls.__subclasses__():
+                if not hasattr(subclass, "TYPE_NAMES") and not len(
+                    subclass.__subclasses__()
+                ):
+                    raise Exception(
+                        "Detected config I/O class {} missing required"
+                        " TYPE_NAMES field".format(subclass.__name__)
+                    )
                 all_subclasses.append(subclass)
                 traverse(subclass)
 
@@ -209,10 +213,11 @@ class KlioJobConfig(object):
     def _create_config_objects(self, configs, io_type, io_direction):
         options = dict(
             [
-                (x.name, x)
+                (type_name.lower(), x)
                 for x in self._get_all_config_subclasses()
                 if x.supports_type(io_type)
                 and x.supports_direction(io_direction)
+                for type_name in x.TYPE_NAMES
             ]
         )
         objs = []

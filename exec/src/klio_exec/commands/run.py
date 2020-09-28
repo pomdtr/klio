@@ -48,6 +48,8 @@ HERE = os.path.abspath(".")
 
 # NOTE: hopefully we don't get an dict lookup errors since KlioConfig
 # should raise if given an unsupported event IO transform
+# NOTE: Currently the key must be the first entry in the corresponding config
+# class TYPE_NAMES class attribute
 class StreamingEventMapper(object):
     input = {"pubsub": beam.io.ReadFromPubSub}
     output = {"pubsub": beam.io.WriteToPubSub}
@@ -425,7 +427,7 @@ class KlioPipeline(object):
         if label_prefix:
             label = "[{}] {}".format(label_prefix, label)
 
-        transform_cls_in = self._io_mapper.input[input_config.name]
+        transform_cls_in = self._io_mapper.input[input_config.TYPE_NAMES[0]]
         in_pcol = pipeline | label >> transform_cls_in(
             **input_config.to_io_kwargs()
         )

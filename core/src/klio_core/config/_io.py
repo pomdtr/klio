@@ -73,6 +73,10 @@ class KlioIOConfig(object):
     io_type = attr.attrib(type=KlioIOType)
     io_direction = attr.attrib(type=KlioIODirection)
 
+    # NOTE: All config classes need a class attribute TYPE_NAMES, which should
+    # be list of strings that identify this I/O type in the "type" field of
+    # config
+
     # these must be filled in by subclasses so Klio knows what supports what
     SUPPORTED_TYPES = []
     SUPPORTED_DIRECTIONS = []
@@ -115,7 +119,7 @@ class KlioIOConfig(object):
         # since dicts preserve order by default in py3, let's force
         # type to be first - particularly helpful/useful for dumping
         # config via `klio job config show`
-        copy = {"type": self.name}
+        copy = {"type": self.TYPE_NAMES[0]}
         copy.update(config_dict)
         return copy
 
@@ -198,7 +202,7 @@ class KlioDataIOConfig(KlioIOConfig):
 
 @attr.attrs(frozen=True)
 class KlioPubSubConfig(object):
-    name = "pubsub"
+    TYPE_NAMES = ["pubsub"]
     topic = attr.attrib(type=str)
 
     @staticmethod
@@ -253,7 +257,7 @@ class KlioPubSubEventOutput(KlioEventOutput, KlioPubSubConfig):
 
 
 class KlioFileConfig(object):
-    name = "file"
+    TYPE_NAMES = ["file"]
 
 
 @attr.attrs(frozen=True)
@@ -330,7 +334,7 @@ class KlioFileOutputDataConfig(KlioDataIOConfig, KlioFileConfig):
 
 
 class KlioAvroConfig(object):
-    name = "avro"
+    TYPE_NAMES = ["avro"]
 
 
 @attr.attrs(frozen=True)
@@ -366,7 +370,7 @@ def _convert_bigquery_input_coder(coder_str):
 
 @attr.attrs(frozen=True)
 class KlioBigQueryConfig(object):
-    name = "bq"
+    TYPE_NAMES = ["bq", "bigquery"]
     project = attr.attrib(type=str, default=None)
     dataset = attr.attrib(type=str, default=None)
     table = attr.attrib(type=str, default=None)
@@ -464,7 +468,7 @@ class KlioBigQueryEventOutput(KlioEventOutput, KlioBigQueryConfig):
 
 @attr.attrs(frozen=True)
 class KlioGCSConfig(KlioIOConfig):
-    name = "gcs"
+    TYPE_NAMES = ["gcs"]
     location = attr.attrib(type=str)
 
     @staticmethod

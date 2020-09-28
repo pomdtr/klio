@@ -416,7 +416,7 @@ def test_klio_read_file_config():
         config_dict, io.KlioIOType.DATA, io.KlioIODirection.INPUT
     )
 
-    assert "file" == klio_read_file_config.name
+    assert "file" in klio_read_file_config.TYPE_NAMES
     assert config_dict["location"] == klio_read_file_config.file_pattern
 
 
@@ -429,7 +429,7 @@ def test_klio_write_file_config():
         config_dict, io.KlioIOType.DATA, io.KlioIODirection.OUTPUT
     )
 
-    assert "file" == klio_write_file_config.name
+    assert "file" in klio_write_file_config.TYPE_NAMES
     assert config_dict["location"] == klio_write_file_config.file_path_prefix
 
 
@@ -450,7 +450,8 @@ def test_klio_write_bigquery_config():
         config_dict, io.KlioIOType.EVENT, io.KlioIODirection.OUTPUT
     )
 
-    assert "bq" == klio_write_bq_cfg.name
+    print(klio_write_bq_cfg.TYPE_NAMES)
+    assert "bq" in klio_write_bq_cfg.TYPE_NAMES
     assert config_dict["schema"] == klio_write_bq_cfg.schema
     assert (
         config_dict["create_disposition"]
