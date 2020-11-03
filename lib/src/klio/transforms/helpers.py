@@ -172,6 +172,7 @@ class _KlioTagMessageVersion(
         # TODO: maybe create a read/write klio pub/sub transform to do
         # this for us.
         if not isinstance(klio_message, klio_pb2.KlioMessage):
+            self._klio.logger.info(f"processing non-message {klio_message}")
             klio_message = serializer.to_klio_message(klio_message)
 
         if klio_message.version == klio_pb2.Version.V2:
