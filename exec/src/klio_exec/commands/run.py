@@ -56,7 +56,7 @@ class StreamingEventMapper(object):
 class BatchEventMapper(object):
     input = {
         "file": transforms.KlioReadFromText,
-        "bq": transforms.KlioReadFromBigQuery,
+        "bq": transforms.io.DanReadFromBigQuery,
         "avro": transforms.KlioReadFromAvro,
     }
     output = {

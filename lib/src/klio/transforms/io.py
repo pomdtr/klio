@@ -172,6 +172,22 @@ class _KlioBigQueryReader(beam_bq_tools.BigQueryReader):
             yield message.SerializeToString()
 
 
+def DanReadFromBigQuery(*args, klio_message_columns = None, **kwargs):
+
+    reader = beam_bq.ReadFromBigQuery(*args, **kwargs)
+
+    def __mapper(row):
+        message = klio_pb2.KlioMessage()
+        message.version = klio_pb2.Version.V2
+        message.metadata.intended_recipients.anyone.SetInParent()
+        message.data.element = bytes(json.dumps(row), "utf-8")
+        return message.SerializeToString()
+
+
+    return reader | beam.Map(__mapper)
+
+
+
 # Note: copy-pasting the docstrings of `BigQuerySource` so that we can
 # include our added parameter (`klio_message_columns`) in the API
 # documentation (via autodoc). If we don't do this, then just the parent
