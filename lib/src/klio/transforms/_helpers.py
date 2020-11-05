@@ -96,8 +96,15 @@ class _KlioBaseDoFnMetaclass(type):
         if not getattr(cls, "_klio", None):
             setattr(cls, "_klio", core.KlioContext())
 
+        some_value = cls._klio.config.job_config.my_key
+        cls._klio.logger.warn(f"config value {some_value}")
+
+        if some_value != "override_value":
+            cls._klio.logger.warn(f"{name} didn't get the right value: {some_value}")
+
         if os.getenv("KLIO_TEST_MODE", "").lower() in ("true", "1"):
             return
+
 
         # TODO: fixme: not every child class will inherit from
         # _KlioBaseDataExistenceCheck
