@@ -177,7 +177,7 @@ class KlioReadFromBigQueryMapper(object):
 # include our added parameter (`klio_message_columns`) in the API
 # documentation (via autodoc). If we don't do this, then just the parent
 # documentation will be shown, excluding our new parameter.
-class KlioReadFromBigQuery(beam_bq.ReadFromBigQuery, _KlioTransformMixin):
+class KlioReadFromBigQuery(beam.PTransform, _KlioTransformMixin):
     """Read data from BigQuery.
       This PTransform uses a BigQuery export job to take a snapshot of the table
       on GCS, and then reads from each produced file. File format is Avro by
@@ -253,12 +253,11 @@ class KlioReadFromBigQuery(beam_bq.ReadFromBigQuery, _KlioTransformMixin):
      """
 
     def __init__(self, *args, klio_message_columns=None, **kwargs):
-        super(KlioReadFromBigQuery, self).__init__(*args, **kwargs)
+        self.__reader = beam_bq.ReadFromBigQuery(*args, **kwargs)
         self.__mapper = KlioReadFromBigQueryMapper(klio_message_columns)
 
     def expand(self, pcoll):
-        bq_read = super(KlioReadFromBigQuery, self).expand(pcoll)
-        return bq_read | self.__mapper.as_beam_map()
+        return self.__reader | self.__mapper.as_beam_map()
 
 
 class KlioWriteToBigQuery(beam.io.WriteToBigQuery, _KlioTransformMixin):
