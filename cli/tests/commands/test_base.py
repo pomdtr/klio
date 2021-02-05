@@ -116,7 +116,7 @@ def expected_volumes():
         },
         "/test/dir/jobs/test_run_job": {"bind": "/usr/src/app", "mode": "rw"},
         "test-config": {
-            "bind": base.BaseDockerizedPipeline.MATERIALIZED_CONFIG_PATH,
+            "bind": config.core.RUN_EFFECTIVE_CONFIG_PATH,
             "mode": "rw",
         },
     }
@@ -191,10 +191,7 @@ def test_get_docker_runflags(
             mock_materialized_config_file,
         )
         expected_command.extend(
-            [
-                "--config-file",
-                base.BaseDockerizedPipeline.MATERIALIZED_CONFIG_PATH,
-            ]
+            ["--config-file", config.core.RUN_EFFECTIVE_CONFIG_PATH]
         )
     else:
         expected_volumes.pop("test-config")

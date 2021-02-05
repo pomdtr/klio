@@ -19,6 +19,8 @@ import tempfile
 
 import docker
 
+from klio_core.config import core as config_core
+
 from klio_cli.utils import docker_utils
 
 
@@ -30,7 +32,6 @@ class BaseDockerizedPipeline(object):
     CONTAINER_JOB_DIR = "/usr/src/app"
     DOCKER_LOGGER_NAME = "klio.base_docker_pipeline"
     # path where the temp config-file is mounted into klio-exec's container
-    MATERIALIZED_CONFIG_PATH = "/usr/src/config/materialized_config.yaml"
 
     def __init__(self, job_dir, klio_config, docker_runtime_config):
         self.job_dir = job_dir
@@ -102,7 +103,7 @@ class BaseDockerizedPipeline(object):
 
         if self.materialized_config_file is not None:
             volumes[self.materialized_config_file.name] = {
-                "bind": BaseDockerizedPipeline.MATERIALIZED_CONFIG_PATH,
+                "bind": config_core.RUN_EFFECTIVE_CONFIG_PATH,
                 "mode": "rw",
             }
 
@@ -114,10 +115,7 @@ class BaseDockerizedPipeline(object):
     def _add_base_args(self, command):
         if self.requires_config_file:
             command.extend(
-                [
-                    "--config-file",
-                    BaseDockerizedPipeline.MATERIALIZED_CONFIG_PATH,
-                ]
+                ["--config-file", config_core.RUN_EFFECTIVE_CONFIG_PATH]
             )
         return command
 
