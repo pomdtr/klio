@@ -28,7 +28,7 @@ logger = logging.getLogger("klio")
 
 # path used by both klio-cli and klioexec to write and read the config when
 # running a job
-RUN_EFFECTIVE_CONFIG_FILE = "klio-job-run-effective.yaml"
+RUN_EFFECTIVE_CONFIG_FILE = ".effective-klio-job.yaml"
 RUN_EFFECTIVE_CONFIG_PATH = os.path.join(
     "/usr/src/app", RUN_EFFECTIVE_CONFIG_FILE
 )
